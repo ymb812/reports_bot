@@ -22,8 +22,7 @@ class Dialogues(BaseModel):
 class Broadcaster(BaseModel):
     mailing_batch_size: int = fields.Field(alias='MAILING_BATCH_SIZE', default=25)
     broadcaster_sleep: int = fields.Field(alias='BROADCASTER_SLEEP', default=1)
-    notification_hours: int = fields.Field(alias='NOTIFICATION_HOURS', default=10)
-    notification_minutes: int = fields.Field(alias='NOTIFICATION_MINUTES', default=0)
+    scheduler_minutes: int = fields.Field(alias='SCHEDULER_MINUTES', default=15)
 
 
 class AppSettings(BaseModel):
