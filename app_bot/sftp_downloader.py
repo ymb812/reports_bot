@@ -1,10 +1,12 @@
-import asyncio
+import logging
 import csv
-import json
 import io
 import paramiko
 from core.database import init, models
 from settings import settings
+
+
+logger = logging.getLogger(__name__)
 
 
 def __download_file_to_memory(sftp: paramiko.SFTPClient, remote_file_path):
@@ -60,6 +62,8 @@ def save_stop_list_as_json(csv_file, json_file):
             file.write('Ресторан,Ресторан_SIFR,Ресторан_CODE,Артикул,MENUITEMS_SIFR,Наименование\n')
             for item in items:
                 file.write(','.join(item) + '\n')
+        logger.info(f'File {filename} is saved!')
+    logger.info(f'Total saved files: {len(restaurant_data.keys())}')
 
     return restaurant_data
 
@@ -73,7 +77,7 @@ def save_stop_list_as_json(csv_file, json_file):
     #     json.dump(json_data, json_out, ensure_ascii=False, indent=4)
 
 
-async def main():
+async def sftp_worker():
     await init()
 
     csv_file = f'{settings.base_files_dir}\\ftp_Stop.csv'
@@ -88,7 +92,3 @@ async def main():
 
     for restaurant in restaurants.keys():
         await models.SubReport.update_or_create(file_name=f'{restaurant}.txt', parent_report_id=report.id)
-
-
-if __name__ == '__main__':
-    asyncio.run(main())  # TODO: ADD APSCHEDULER
