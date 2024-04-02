@@ -1,7 +1,9 @@
-import io
-import paramiko
+import asyncio
 import csv
 import json
+import io
+import paramiko
+from core.database import init, models
 from settings import settings
 
 
@@ -42,6 +44,8 @@ def save_stop_list_as_json(csv_file, json_file):
         for row in csv_reader:
             restaurant = row[0]
             if restaurant != 'End':
+                if restaurant == 'Start':
+                    continue
                 if restaurant in restaurant_data:
                     restaurant_data[restaurant].append(row[1:])
                 else:
@@ -69,9 +73,22 @@ def save_stop_list_as_json(csv_file, json_file):
     #     json.dump(json_data, json_out, ensure_ascii=False, indent=4)
 
 
+async def main():
+    await init()
 
-if __name__ == '__main__':
     csv_file = f'{settings.base_files_dir}\\ftp_Stop.csv'
 
     save_files_from_ftp()
-    save_stop_list_as_json(csv_file=csv_file, json_file=settings.stop_list_json_file)
+    restaurants = save_stop_list_as_json(csv_file=csv_file, json_file=settings.stop_list_json_file)
+
+    # add report and sub_reports for StopList
+    report = await models.Report.get_or_none(name='Отчет по стоп-листу')
+    if not report:
+        report = await models.Report.create(name='Отчет по стоп-листу')
+
+    for restaurant in restaurants.keys():
+        await models.SubReport.update_or_create(file_name=f'{restaurant}.txt', parent_report_id=report.id)
+
+
+if __name__ == '__main__':
+    asyncio.run(main())  # TODO: ADD APSCHEDULER

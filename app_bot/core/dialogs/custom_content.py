@@ -44,6 +44,10 @@ class CustomPager(ScrollingGroup):
                     callback_data=self._item_callback_data(prev_page),
                 ),
                 InlineKeyboardButton(
+                    text=str(current_page + 1),
+                    callback_data=self._item_callback_data(current_page),
+                ),
+                InlineKeyboardButton(
                     text=_('FORWARD_PAGER'),
                     callback_data=self._item_callback_data(next_page),
                 ),

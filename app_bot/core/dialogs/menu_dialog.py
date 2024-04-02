@@ -7,7 +7,7 @@ from core.states.main_menu import MainMenuStateGroup
 from core.utils.texts import _
 from core.dialogs.custom_content import CustomPager
 from core.dialogs.callbacks import AdminCallbackHandler
-from core.dialogs.getters import get_reports
+from core.dialogs.getters import get_reports, get_sub_reports
 from settings import settings
 
 
@@ -30,5 +30,25 @@ main_menu_dialog = Dialog(
         ),
         getter=get_reports,
         state=MainMenuStateGroup.menu,
+    ),
+
+    # report_category
+    Window(
+        Const(text=_('PICK_REPORT')),
+        CustomPager(
+            Select(
+                id='_sub_reports_select',
+                items='sub_reports',
+                item_id_getter=lambda item: item.id,
+                text=Format(text='{item.file_name}'),
+                on_click=AdminCallbackHandler.selected_sub_report,
+            ),
+            id='sub_reports_group',
+            height=settings.items_per_page_height,
+            width=settings.items_per_page_width,
+            hide_on_single_page=True,
+        ),
+        getter=get_sub_reports,
+        state=MainMenuStateGroup.report_category,
     ),
 )
