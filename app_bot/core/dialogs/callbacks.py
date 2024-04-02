@@ -1,11 +1,11 @@
 from tortoise.exceptions import IntegrityError
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, FSInputFile
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, Select, SwitchPage
 from core.states.main_menu import MainMenuStateGroup
 from core.states.admin_menu import AdminStateGroup, AddUserStateGroup
-from core.database.models import Report, ReportAccess, User
+from core.database.models import Report, SubReport, ReportAccess, User
 from core.utils.texts import _
 from settings import settings
 
@@ -25,11 +25,30 @@ class AdminCallbackHandler:
         # send content
         report = await Report.get_or_none(id=item_id)
         if report:
-            await callback.message.answer(text=report.text)
+            await dialog_manager.switch_to(MainMenuStateGroup.report_category)
         else:
             await callback.message.answer(text='Отчет не найден')
 
-        await dialog_manager.switch_to(MainMenuStateGroup.menu)
+
+    @classmethod
+    async def selected_sub_report(
+            cls,
+            callback: CallbackQuery,
+            widget: Select,
+            dialog_manager: DialogManager,
+            item_id: str,
+    ):
+
+        dialog_manager.dialog_data['sub_report_id'] = item_id
+
+        # send content
+        sub_report = await SubReport.get_or_none(id=item_id)
+        if sub_report:
+            await callback.message.answer_document(
+                document=FSInputFile(path=f'{settings.base_files_dir}\\{sub_report.file_name}')
+            )
+        else:
+            await callback.message.answer(text='Отчет не найден')
 
 
     @classmethod

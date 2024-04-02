@@ -44,7 +44,17 @@ class Report(Model):
     id = fields.IntField(pk=True, index=True)
     name = fields.CharField(max_length=64)
     text = fields.TextField(null=True)
-    file_id = fields.CharField(max_length=256, null=True)
+    file_name = fields.CharField(max_length=64, null=True)
+
+
+class SubReport(Model):
+    class Meta:
+        table = 'sub_reports'
+        ordering = ['id']
+
+    id = fields.IntField(pk=True, index=True)
+    file_name = fields.CharField(max_length=64, null=True)
+    parent_report = fields.ForeignKeyField('models.Report', to_field='id')
 
 
 class ReportAccess(Model):

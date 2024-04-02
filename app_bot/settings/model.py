@@ -13,9 +13,11 @@ class BotSettings(BaseModel):
     notification_post_id: int = fields.Field(alias='NOTIFICATION_POST_ID')
     registered_post_id: int = fields.Field(alias='REGISTERED_POST_ID')
 
+
 class Dialogues(BaseModel):
     items_per_page_height: int = fields.Field(alias='CATEGORIES_HEIGHT')
     items_per_page_width: int = fields.Field(alias='CATEGORIES_WIDTH')
+
 
 class Broadcaster(BaseModel):
     mailing_batch_size: int = fields.Field(alias='MAILING_BATCH_SIZE', default=25)
@@ -23,9 +25,13 @@ class Broadcaster(BaseModel):
     notification_hours: int = fields.Field(alias='NOTIFICATION_HOURS', default=10)
     notification_minutes: int = fields.Field(alias='NOTIFICATION_MINUTES', default=0)
 
+
 class AppSettings(BaseModel):
     prod_mode: bool = fields.Field(alias='PROD_MODE', default=False)
     excel_file: str = fields.Field(alias='EXCEL_FILE', default='Users stats.xlsx')
+    stop_list_json_file: str = fields.Field(alias='STOP_LIST_JSON_FILE', default='stop_list.json')
+    base_files_dir: str = fields.Field(alias='BASE_FILES_DIR', default='files_from_server')
+    remote_directory: str = fields.Field(alias='SERVER_FILES_DIR')
 
 
 class PostgresSettings(BaseModel):
@@ -42,12 +48,20 @@ class RedisSettings(BaseModel):
     redis_name: str = fields.Field(alias='REDIS_NAME')
 
 
+class FTPSettings(BaseModel):
+    ftp_user: str = fields.Field(alias='FTP_USER')
+    ftp_host: str = fields.Field(alias='FTP_HOST')
+    ftp_port: int = fields.Field(alias='FTP_PORT')
+    ftp_pass: SecretStr = fields.Field(alias='FTP_PASSWORD')
+
+
 class Settings(
     BotSettings,
     AppSettings,
     PostgresSettings,
     Broadcaster,
     Dialogues,
-    RedisSettings
+    RedisSettings,
+    FTPSettings
 ):
     model_config = SettingsConfigDict(extra='ignore')
