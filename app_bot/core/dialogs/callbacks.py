@@ -45,7 +45,7 @@ class AdminCallbackHandler:
         sub_report = await SubReport.get_or_none(id=item_id)
         if sub_report:
             await callback.message.answer_document(
-                document=FSInputFile(path=f'{settings.base_files_dir}\\{sub_report.file_name}')
+                document=FSInputFile(path=f'{settings.base_files_dir}/{sub_report.file_name}')
             )
         else:
             await callback.message.answer(text='Отчет не найден')
