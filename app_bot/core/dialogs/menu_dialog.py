@@ -48,6 +48,7 @@ main_menu_dialog = Dialog(
             width=settings.items_per_page_width,
             hide_on_single_page=True,
         ),
+        SwitchTo(Const(text=_('BACK_BUTTON')), id='go_to_reports', state=MainMenuStateGroup.menu),
         getter=get_sub_reports,
         state=MainMenuStateGroup.report_category,
     ),
