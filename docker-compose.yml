@@ -46,20 +46,3 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-
-  broadcaster:
-    build:
-      context: .
-      dockerfile: DockerfileBroadcaster
-    container_name: reports_broadcaster
-    restart: 'always'
-    env_file:
-      - .env
-    environment:
-      POSTGRES_HOST: postgres
-      TZ: Europe/Moscow
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_started
