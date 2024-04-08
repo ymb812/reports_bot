@@ -7,6 +7,7 @@ from setup import register
 from core.handlers import routers
 from core.dialogs import dialogues
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
+from broadcaster import start_broadcaster, run_scheduler
 
 
 bot = Bot(settings.bot_token.get_secret_value(), parse_mode='HTML')
@@ -28,5 +29,12 @@ async def main():
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
 
+async def run_tasks():
+    bot = asyncio.create_task(main())
+    broadcaster = asyncio.create_task(start_broadcaster())
+    scheduler = asyncio.create_task(run_scheduler())
+    await asyncio.gather(broadcaster, scheduler, bot)
+
+
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(run_tasks())
