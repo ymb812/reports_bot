@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DATABASE}
 
-    container_name: museum_postgres
+    container_name: reports_postgres
     restart: 'always'
     ports:
       - '5432'
@@ -33,12 +33,12 @@ services:
     build:
       context: .
       dockerfile: DockerfileBot
-    container_name: museum_bot
+    container_name: reports_bot
     restart: 'always'
     env_file:
       - .env
     environment:
-      #POSTGRES_HOST: postgres
+      POSTGRES_HOST: postgres
       REDIS_HOST: redis
       TZ: Europe/Moscow
     depends_on:
@@ -51,12 +51,12 @@ services:
     build:
       context: .
       dockerfile: DockerfileBroadcaster
-    container_name: museum_broadcaster
+    container_name: reports_broadcaster
     restart: 'always'
     env_file:
       - .env
     environment:
-      #POSTGRES_HOST: postgres
+      POSTGRES_HOST: postgres
       TZ: Europe/Moscow
     depends_on:
       postgres:

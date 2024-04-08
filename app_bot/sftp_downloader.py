@@ -78,8 +78,6 @@ def save_stop_list_as_json(csv_file, json_file):
 
 
 async def sftp_worker():
-    await init()
-
     csv_file = f'{settings.base_files_dir}\\ftp_Stop.csv'
 
     save_files_from_ftp()
