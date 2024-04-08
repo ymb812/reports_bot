@@ -159,7 +159,7 @@ class Broadcaster(object):
             await asyncio.sleep(settings.broadcaster_sleep)
 
 
-async def main():
+async def start_broadcaster():
     await init()
     await Broadcaster.start_event_loop()
 
@@ -172,13 +172,3 @@ async def run_scheduler():
         next_run_time=datetime.now()
     )
     scheduler.start()
-
-
-async def run_tasks():
-    broadcaster = asyncio.create_task(main())
-    scheduler = asyncio.create_task(run_scheduler())
-    await asyncio.gather(broadcaster, scheduler)
-
-
-if __name__ == '__main__':
-    asyncio.run(run_tasks())
