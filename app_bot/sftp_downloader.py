@@ -68,7 +68,7 @@ def save_stop_list_as_json(csv_file, json_file):
         with open(filename, 'w', encoding='utf-8') as file:
             file.write('Ресторан,Ресторан_SIFR,Ресторан_CODE,Артикул,MENUITEMS_SIFR,Наименованиеn')
             for item in items:
-                file.write(','.join(item) + 'n')
+                file.write(','.join(item) + '\n')
             logger.info(f'File {filename} is saved!')
     logger.info(f'Total saved files: {len(restaurant_data.keys())}')
 
